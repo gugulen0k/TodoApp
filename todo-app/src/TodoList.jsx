@@ -1,7 +1,9 @@
-import React from 'react'
-import Task from './Task'
-
+import React, { useEffect } from 'react'
 import styled from 'styled-components'
+import { useSelector, useDispatch } from 'react-redux'
+
+import Task from './Task'
+import { triggerGetTodos } from './slices/getTodosSlice'
 
 const Block = styled('div')`
     width: 100%;
@@ -17,15 +19,19 @@ const Title = styled('span')`
 `
 
 const TodoList = () => {
+    const todos = useSelector(state => state.todos.data)
+    const isLoading = useSelector(state => state.todos.loading)
+    let dispatch = useDispatch()
+
+    useEffect(() => {
+        dispatch(triggerGetTodos())
+    }, [ dispatch ])
+    console.log(todos)
+
     return (
         <Block>
             <Title>Todos:</Title>
-            <Task name="name lorem ipsum set dolor"/>
-            <Task name="name"/>
-            <Task name="name"/>
-            <Task name="name"/>
-            <Task name="name"/>
-            <Task name="name"/>
+            { isLoading ? "loading..." : todos.map(task => <Task key={task.id} name={task.name}/>) }
         </Block>
     )
 }
