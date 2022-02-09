@@ -1,8 +1,10 @@
 import React from 'react'
+import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
 import edit from './images/pencil.png'
 import remove from './images/trash-bin.png'
+import { triggerRemoveTodo } from './redux/slices/getTodosSlice'
 
 const Block = styled('div')`
     background: white;
@@ -40,7 +42,14 @@ const Image = styled('img')`
     height: 20px;
 `
 
-const Task = ({ name }) => {
+const Task = ({ id, name }) => {
+    const dispatch = useDispatch()
+
+    const removeTodo = (event) => {
+        event.preventDefault()
+        dispatch(triggerRemoveTodo(id))
+    }
+
     return (
         <Block>
             <Title>{ name }</Title>
@@ -48,7 +57,7 @@ const Task = ({ name }) => {
                 <CustomButton>
                     <Image src={edit} alt=""/>
                 </CustomButton>
-                <CustomButton>
+                <CustomButton onClick={removeTodo}>
                     <Image src={remove} alt="" />
                 </CustomButton>
             </div>

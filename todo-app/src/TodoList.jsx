@@ -3,13 +3,14 @@ import styled from 'styled-components'
 import { useSelector, useDispatch } from 'react-redux'
 
 import Task from './Task'
-import { triggerGetTodos } from './slices/getTodosSlice'
+import { triggerTodos } from './redux/slices/getTodosSlice'
 
 const Block = styled('div')`
     width: 100%;
     display: flex;
     flex-direction: column;
     gap: 10px;
+    padding: 0 0 50px 0;
 `
 
 const Title = styled('span')`
@@ -24,14 +25,13 @@ const TodoList = () => {
     let dispatch = useDispatch()
 
     useEffect(() => {
-        dispatch(triggerGetTodos())
+        dispatch(triggerTodos())
     }, [ dispatch ])
-    console.log(todos)
 
     return (
         <Block>
             <Title>Todos:</Title>
-            { isLoading ? "loading..." : todos.map(task => <Task key={task.id} name={task.name}/>) }
+            { todos.length === 0 ? 'There is no todos in the database' : isLoading ? "loading..." : todos.map(task => <Task key={task.id} id={task.id} name={task.name}/>) }
         </Block>
     )
 }

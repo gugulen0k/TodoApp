@@ -1,5 +1,9 @@
-import React from 'react'
+import React, { useEffect,  useRef } from 'react'
+import { useState } from 'react';
+import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
+import { triggerAddTodo, triggerTodos } from './redux/slices/getTodosSlice';
 
 const CustomInput = styled('input')`
     height: 40px;
@@ -42,12 +46,49 @@ const CustomForm = styled('form')`
     gap: 10px;
 `
 
+const ErrorMessage = styled('span')`
+    color: #df5454;
+    margin: 5px 0;
+`
+
+const Block = styled('div')`
+    display: flex;
+    flex-direction: column;
+`
+
 const TodoForm = () => {
+    const inputRef = useRef()
+    const todos = useSelector(state => state.todos.data).map(todo => todo.name)
+    const [ error, setError ] = useState(false)
+    const dispatch = useDispatch()
+
+    useEffect(() => {
+        inputRef.current.focus()
+    }, [])
+
+
+    const addTodo = (event) => {
+        event.preventDefault()
+        const newTask = inputRef.current.value
+
+        if ( newTask.length === 0 || todos.includes(newTask) ) {
+            setError(true)
+            return
+        } else {
+            inputRef.current.value = ''
+            setError(false)
+            dispatch(triggerAddTodo(newTask))
+        }
+    }
+
     return (
         <div>
             <CustomForm method="post">
-                <CustomInput type="text" />
-                <CustomButton type='submit'>Add new task</CustomButton>
+                <Block>
+                    <CustomInput ref={inputRef} type="text" style={{ borderColor: error === true ? '#df5454' : 'rgba(27, 31, 35, 0.6)' }}/>
+                    <ErrorMessage style={{ visibility: error ? 'visible' : 'hidden' }}>This task already exists</ErrorMessage>
+                </Block>
+                <CustomButton onClick={addTodo}>Add new task</CustomButton>
             </CustomForm>
         </div>
     )
