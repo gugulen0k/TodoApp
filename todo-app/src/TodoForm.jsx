@@ -60,6 +60,7 @@ const TodoForm = () => {
     const inputRef = useRef()
     const todos = useSelector(state => state.todos.data).map(todo => todo.name)
     const [ error, setError ] = useState(false)
+    const [ errorMessage, setErrorMessage ] = useState('')
     const dispatch = useDispatch()
 
     useEffect(() => {
@@ -71,8 +72,13 @@ const TodoForm = () => {
         event.preventDefault()
         const newTask = inputRef.current.value
 
-        if ( newTask.length === 0 || todos.includes(newTask) ) {
+        if ( newTask.trim().length === 0 ) {
             setError(true)
+            setErrorMessage('Task could not be empty')
+            return
+        } if ( todos.includes(newTask) ) {
+            setError(true)
+            setErrorMessage("This task already exists")
             return
         } else {
             inputRef.current.value = ''
@@ -86,7 +92,7 @@ const TodoForm = () => {
             <CustomForm method="post">
                 <Block>
                     <CustomInput ref={inputRef} type="text" style={{ borderColor: error === true ? '#df5454' : 'rgba(27, 31, 35, 0.6)' }}/>
-                    <ErrorMessage style={{ visibility: error ? 'visible' : 'hidden' }}>This task already exists</ErrorMessage>
+                    <ErrorMessage style={{ visibility: error ? 'visible' : 'hidden' }}>{ errorMessage }</ErrorMessage>
                 </Block>
                 <CustomButton onClick={addTodo}>Add new task</CustomButton>
             </CustomForm>
