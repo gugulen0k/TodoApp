@@ -7,7 +7,6 @@ export function* workGetTodos() {
         const data  = yield call(requestAllTodos)
         yield put(successGetTodos(data))
     } catch (error) {
-        console.log(error.message)
         yield put(failureGetTodos(error.message))
     }
 }

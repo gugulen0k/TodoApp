@@ -1,10 +1,16 @@
 import React from 'react'
 import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
+import {
+    BrowserRouter as Router,
+    Switch,
+    Route,
+    Link
+  } from "react-router-dom";
 
-import edit from './images/pencil.png'
-import remove from './images/trash-bin.png'
-import { triggerRemoveTodo } from './redux/slices/getTodosSlice'
+import edit from '../images/pencil.png'
+import remove from '../images/trash-bin.png'
+import { triggerRemoveTodo } from '../redux/slices/getTodosSlice'
 
 const Block = styled('div')`
     background: white;
@@ -50,13 +56,16 @@ const Task = ({ id, name }) => {
         dispatch(triggerRemoveTodo(id))
     }
 
+
     return (
         <Block>
             <Title>{ name }</Title>
             <div style={{ display: 'flex', gap: '10px' }}>
-                <CustomButton>
-                    <Image src={edit} alt=""/>
-                </CustomButton>
+                <Link to={`/${id}`}>
+                    <CustomButton>
+                        <Image src={edit} alt=""/>
+                    </CustomButton>
+                </Link>
                 <CustomButton onClick={removeTodo}>
                     <Image src={remove} alt="" />
                 </CustomButton>

@@ -3,7 +3,9 @@ import styled from 'styled-components'
 import { useSelector, useDispatch } from 'react-redux'
 
 import Task from './Task'
-import { triggerTodos } from './redux/slices/getTodosSlice'
+import { triggerTodos } from '../redux/slices/getTodosSlice'
+import { triggerGetTodoInfo } from '../redux/slices/getTodoInfoSlice'
+import { Link } from 'react-router-dom'
 
 const Block = styled('div')`
     width: 100%;
