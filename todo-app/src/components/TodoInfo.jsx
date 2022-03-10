@@ -2,7 +2,8 @@ import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import styled from 'styled-components';
-import { triggerGetTodoInfo } from "../redux/slices/getTodoInfoSlice";
+import { resetTodoInfo, triggerGetTodoInfo } from "../redux/slices/getTodoInfoSlice";
+import { triggerUpdateTodoInfo } from "../redux/slices/updateTodoSlice";
 
 const CustomForm = styled.form`
     background: white;
@@ -24,6 +25,7 @@ const Block = styled.div`
 `
 
 const CustomButton = styled('button')`
+    grid-column: 1/3;
     height: 40px;
     background: #ffffff;
     border: 1px solid rgba(27, 31, 35, 0.15);
@@ -33,6 +35,7 @@ const CustomButton = styled('button')`
     color: #212126;
     font-weight: 400;
     padding: 0 10px;
+    margin: 20px 0 0 0;
     cursor: pointer;
     transition: 300ms cubic-bezier(.17,.64,.38,.84);
 
@@ -60,34 +63,54 @@ const CustomInput = styled('input')`
     }
 `
 
+const SaveMessage = styled.div`
+    position: absolute;
+    top: 50px;
+    right: 50px;
+    background: #54df82;
+    color: white;
+    font-size: 1.3rem;
+    border-radius: 10px;
+    padding: 25px;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+    opacity: 0;
+    transition: 300ms cubic-bezier(.17,.64,.38,.84);
+`
+
 const TodoInfo = () => {
-    const todos = useSelector(state => state.todos.data).map(todo => todo.name)
     const { id, name, completed, created_at, updated_at } = useSelector(state => state.todoInfo.data)
     const dispatch = useDispatch()
     let params = useParams()
-    const inputRef = useRef();
+    const inputRef = useRef()
+    const checkboxRef = useRef();
     const [ error, setError ] = useState(false)
+    const [ opacity, setOpacity ] = useState(0)
     const [ errorMessage, setErrorMessage ] = useState('')
 
-    const created = new Date(created_at).toLocaleString("en-US");
-    const updated = new Date(updated_at).toLocaleString("en-US");
+    const created = new Date(created_at)
+    const updated = new Date(updated_at)
+    const createdAt = created.getDate() + '/' + ( created.getMonth() + 1 ) + '/' + created.getFullYear()
+    const updatedAt = updated.getDate() + '/' + ( updated.getMonth() + 1 ) + '/' + updated.getFullYear()
 
-    const changeTodo = (event) => {
+    const updateTodo = (event) => {
         event.preventDefault()
-        const newTask = inputRef.current.value
+        const newName = inputRef.current.value
+        const completedValue = checkboxRef.current.checked
 
-        if ( newTask.trim().length === 0 ) {
+        if ( newName.trim().length === 0 ) {
             setError(true)
             setErrorMessage('Task could not be empty')
             return
-        } if ( todos.includes(newTask) ) {
-            setError(true)
-            setErrorMessage("This task already exists")
-            return
         } else {
-            inputRef.current.value = ''
             setError(false)
-            // dispatch(triggerAddTodo(newTask))
+            const obj = {
+                id,
+                newName,
+                completedValue
+            }
+            dispatch(triggerUpdateTodoInfo( obj ))
+            dispatch(resetTodoInfo())
+            setOpacity(1)
         }
     }
 
@@ -97,6 +120,7 @@ const TodoInfo = () => {
 
     return (
         <Block>
+            <SaveMessage style={{ opacity: opacity}}>Task successfully changed</SaveMessage>
             <CustomForm action="post">
                 <span>Id:</span>
                 <span>{ id }</span>
@@ -105,15 +129,15 @@ const TodoInfo = () => {
                 <CustomInput ref={inputRef} defaultValue={ name } type="text" style={{ borderColor: error === true ? '#df5454' : 'rgba(27, 31, 35, 0.6)' }}/>
 
                 <span>Completed:</span>
-                <input type="checkbox" name="completed" id="completed" value="true"/>
+                <input type="checkbox" name="completed" id="completed" defaultChecked={completed} ref={checkboxRef}/>
 
                 <span>Created at:</span>
-                <span>{ created }</span>
+                <span>{ createdAt }</span>
 
                 <span>Updated at:</span>
-                <span>{ updated }</span>
-                <CustomButton type="submit" onClick={ changeTodo }>SAVE</CustomButton>
-        </CustomForm>
+                <span>{ updatedAt }</span>
+                <CustomButton type="submit" onClick={ updateTodo }>SAVE</CustomButton>
+            </CustomForm>
         </Block>
     )
 }

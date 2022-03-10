@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux'
 
 import Task from './Task'
 import { triggerTodos } from '../redux/slices/getTodosSlice'
-import { triggerGetTodoInfo } from '../redux/slices/getTodoInfoSlice'
+import { resetTodoInfo, triggerGetTodoInfo } from '../redux/slices/getTodoInfoSlice'
 import { Link } from 'react-router-dom'
 
 const Block = styled('div')`
@@ -13,10 +13,6 @@ const Block = styled('div')`
     flex-direction: column;
     gap: 10px;
     padding: 0 0 50px 0;
-`
-
-const CompletedTask = styled(Task)`
-    opacity: 0.5;
 `
 
 const Title = styled('span')`
@@ -31,6 +27,7 @@ const TodoList = () => {
     let dispatch = useDispatch()
 
     useEffect(() => {
+        dispatch( resetTodoInfo() )
         dispatch( triggerTodos() )
     }, [ dispatch ])
 
@@ -39,8 +36,7 @@ const TodoList = () => {
             <Title>Todos:</Title>
             { todos.length === 0 ? 'There is no todos in the database' : isLoading ? "loading..." : todos.map(task => {
                 if ( task.completed === 1 ) {
-                    // return 'hello'
-                    return <CompletedTask key={task.id} id={task.id} name={task.name}/>
+                    return <Task key={task.id} id={task.id} name={task.name} opacityValue={ 0.5 }/>
                 } else {
                     return <Task key={task.id} id={task.id} name={task.name}/>
                 }

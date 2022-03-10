@@ -5,13 +5,16 @@ import { workAddTodo } from "./handlers/addTodoHandler"
 import { workGetTodos } from "./handlers/getTodosHandler"
 import { workRemoveTodo } from "./handlers/removeTodoHandler"
 import { workGetTodoInfo } from './handlers/getTodoInfoHandler'
+import { triggerUpdateTodoInfo } from "../slices/updateTodoSlice"
+import { workUpdateTodo } from "./handlers/updateTodoHandler"
 
 function* todoSaga() {
     yield all([
         takeEvery(triggerTodos, workGetTodos),
         takeEvery(triggerAddTodo, workAddTodo),
         takeEvery(triggerRemoveTodo, workRemoveTodo),
-        takeEvery(triggerGetTodoInfo, workGetTodoInfo)
+        takeEvery(triggerGetTodoInfo, workGetTodoInfo),
+        takeEvery(triggerUpdateTodoInfo, workUpdateTodo)
     ])
 }
 

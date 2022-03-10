@@ -3,6 +3,6 @@ import axios from 'axios'
 export const requestTodoInfo = ( id ) => {
     return axios.request({
         method: "GET",
-        url: `http://localhost:5000/api/tasks/${id}`
+        url: `https://gugulenok-todo-app-api.herokuapp.com/api/tasks/${id}`
     }).then(response => response.data.task)
 }

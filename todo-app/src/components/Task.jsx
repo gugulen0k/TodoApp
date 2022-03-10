@@ -43,7 +43,7 @@ const Image = styled('img')`
     height: 20px;
 `
 
-const Task = ({ id, name }) => {
+const Task = ({ id, name, opacityValue }) => {
     const dispatch = useDispatch()
 
     const removeTodo = (event) => {
@@ -53,7 +53,7 @@ const Task = ({ id, name }) => {
 
 
     return (
-        <Block>
+        <Block style={{ opacity: opacityValue }}>
             <Title>{ name }</Title>
             <div style={{ display: 'flex', gap: '10px' }}>
                 <Link to={`/${id}`}>

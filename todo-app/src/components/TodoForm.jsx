@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
-import { triggerAddTodo, triggerTodos } from '../redux/slices/getTodosSlice';
+import { triggerAddTodo } from '../redux/slices/getTodosSlice';
 
 const CustomInput = styled('input')`
     height: 40px;
@@ -75,10 +75,6 @@ const TodoForm = () => {
         if ( newTask.trim().length === 0 ) {
             setError(true)
             setErrorMessage('Task could not be empty')
-            return
-        } if ( todos.includes(newTask) ) {
-            setError(true)
-            setErrorMessage("This task already exists")
             return
         } else {
             inputRef.current.value = ''

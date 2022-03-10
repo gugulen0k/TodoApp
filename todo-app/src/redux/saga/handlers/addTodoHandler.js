@@ -8,7 +8,6 @@ export function* workAddTodo (action) {
         const todo = yield call(addTodo, action.payload)
         yield put(successAddTodo(todo))
     } catch (error) {
-        console.log(error)
         yield put(failureAddTodo(error.message))
     }
 }
